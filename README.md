@@ -10,8 +10,11 @@ Este projeto tem como objetivo validar os endpoints da API DummyJSON através de
 - Rest Assured
 - GitHub Actions
 
-## Como Executar
+## Como Executar os testes
 
-## Executar testes
+### Pré-requisitos
+- Java 17 instalado
+- Maven instalado
 
+```bash
 mvn clean test
