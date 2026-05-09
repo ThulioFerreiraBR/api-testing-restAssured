@@ -4,11 +4,11 @@ import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class HealthClient {
+public class UserClient {
 
-    public Response getStatus() {
+    public Response getUsers() {
         return given()
                 .when()
-                .get("/test");
+                .get("/users");
     }
 }
