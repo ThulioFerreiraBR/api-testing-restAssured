@@ -1,7 +1,6 @@
 package tests;
 
 import base.BaseTest;
-import clients.HealthClient;
 import clients.UserClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,7 @@ import static org.hamcrest.Matchers.*;
 
 public class UserTest extends BaseTest {
 
-    UserClient userClient = new UserClient();
+    private final UserClient userClient = new UserClient();
 
     @Test
     @DisplayName("Should return users successfully")

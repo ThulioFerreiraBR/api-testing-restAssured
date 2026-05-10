@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.*;
 
 public class HealthTest extends BaseTest {
 
-    HealthClient healthClient = new HealthClient();
+    private final HealthClient healthClient = new HealthClient();
 
     @Test
     @DisplayName("Should return API status successfully")
