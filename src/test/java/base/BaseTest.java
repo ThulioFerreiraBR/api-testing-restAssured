@@ -1,12 +1,12 @@
 package base;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
 public class BaseTest {
 
-    @BeforeEach
-    void setup() {
+    @BeforeAll
+    static void setup() {
 
         RestAssured.baseURI = "https://dummyjson.com";
     }

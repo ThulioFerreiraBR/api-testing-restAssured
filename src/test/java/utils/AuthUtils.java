@@ -4,6 +4,8 @@ import clients.AuthClient;
 import clients.UserClient;
 import io.restassured.response.Response;
 
+import java.util.Map;
+
 public class AuthUtils {
 
     private static final UserClient userClient = new UserClient();
@@ -16,10 +18,15 @@ public class AuthUtils {
         String username = usersResponse.path("users[0].username");
         String password = usersResponse.path("users[0].password");
 
+        Map<String, Object> body = Map.of(
+                "username", username,
+                "password", password
+        );
+
         return authClient
-            .login(username, password)
-            .then()
-            .extract()
-            .path("accessToken");
+                .login(body)
+                .then()
+                .extract()
+                .path("accessToken");
     }
 }

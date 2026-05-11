@@ -9,15 +9,12 @@ import static io.restassured.RestAssured.given;
 
 public class AuthClient {
 
-    public Response login(String username, String password) {
+    public Response login(Map<String, Object> body) {
 
         return given()
-            .contentType(ContentType.JSON)
-            .body(Map.of(
-                "username", username,
-                "password", password
-            ))
-            .when()
-            .post("/auth/login");
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post("/auth/login");
     }
 }
