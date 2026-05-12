@@ -20,9 +20,9 @@ public class ProductTest extends BaseTest {
 
     private static final long RESPONSE_TIME_MS = 3000L;
     private static final List<String> ALLOWED_STATUS = List.of("In Stock", "Low Stock");
-    int invalidId = Integer.MAX_VALUE;
-    private static final String MSG_PRODUCT_NOT_FOUND = "Product with id '' not found";
-
+    private static final int INVALID_ID = Integer.MAX_VALUE;
+    private static final int NEGATIVE_ID = -1;
+    private static final String MSG_PRODUCT_NOT_FOUND = "^Product with id '(-?\\d+)' not found$";
 
     // -------------------------------------------------------------------------
     // Clients
@@ -80,6 +80,7 @@ public class ProductTest extends BaseTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("Should return product by random valid ID")
     void shouldReturnProductByRandomId() {
 
@@ -111,16 +112,28 @@ public class ProductTest extends BaseTest {
     // -------------------------------------------------------------------------
     // Invalid products
     // -------------------------------------------------------------------------
+
     @Test
-    @DisplayName("Should not return product with invalid ID")
-    void shouldNotReturnProductWithInvalidId() {
-        productClient.getProductById(invalidId)
+    @Tag("regression")
+    @DisplayName("Should not return product with non-existent ID")
+    void shouldNotReturnProductWithNonExistentId() {
+        productClient.getProductById(INVALID_ID)
                 .then()
                 .statusCode(404)
                 .header("Content-Type", containsString("application/json"))
-                .time(lessThan(RESPONSE_TIME_MS));
-
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("message", matchesRegex(MSG_PRODUCT_NOT_FOUND));
     }
 
-
+    @Test
+    @Tag("regression")
+    @DisplayName("Should not return product with negative ID")
+    void shouldNotReturnProductWithNegativeId() {
+        productClient.getProductById(NEGATIVE_ID)
+                .then()
+                .statusCode(404)
+                .header("Content-Type", containsString("application/json"))
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("message", matchesRegex(MSG_PRODUCT_NOT_FOUND));
+    }
 }
