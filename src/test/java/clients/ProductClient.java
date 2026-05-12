@@ -1,6 +1,8 @@
 package clients;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import models.ProductRequest;
 
 import static io.restassured.RestAssured.given;
 
@@ -32,5 +34,13 @@ public class ProductClient {
         return given()
                 .when()
                 .get("/auth/products");
+    }
+
+    public Response createProduct(ProductRequest payload) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(payload)
+                .when()
+                .post(BASE_PATH + "/add");
     }
 }

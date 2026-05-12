@@ -200,5 +200,17 @@ public class ProductTest extends BaseTest {
                 .body("message", equalTo(MSG_EXPIRED_INVALID_TOKEN));
     }
 
+    // -------------------------------------------------------------------------
+    // Create product
+    // -------------------------------------------------------------------------
+
+    @Test
+
+    @DisplayName("Should create product successfully")
+    void shouldCreateProductSuccessfully() {
+
+    }
+
+
 
 }
