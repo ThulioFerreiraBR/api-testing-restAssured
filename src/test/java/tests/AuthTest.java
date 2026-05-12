@@ -135,6 +135,7 @@ public class AuthTest extends BaseTest {
     // -------------------------------------------------------------------------
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login without password")
     void shouldNotLoginWithoutPassword() {
         Map<String, Object> body = Map.of(
@@ -151,6 +152,7 @@ public class AuthTest extends BaseTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login without username")
     void shouldNotLoginWithoutUsername() {
         Map<String, Object> body = Map.of(
@@ -167,6 +169,7 @@ public class AuthTest extends BaseTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login with empty body")
     void shouldNotLoginWithEmptyBody() {
         authClient.login(Collections.emptyMap())
@@ -183,6 +186,7 @@ public class AuthTest extends BaseTest {
     // -------------------------------------------------------------------------
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login when username is an integer")
     void shouldNotLoginWithIntegerAsUsername() {
         Map<String, Object> body = Map.of(
@@ -200,6 +204,7 @@ public class AuthTest extends BaseTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login when password is a boolean")
     void shouldNotLoginWithBooleanAsPassword() {
         Map<String, Object> body = Map.of(
@@ -217,6 +222,7 @@ public class AuthTest extends BaseTest {
     }
 
     @Test
+    @Tag("regression")
     @DisplayName("Should not login when both fields have wrong data types")
     void shouldNotLoginWithBothFieldsAsWrongTypes() {
         Map<String, Object> body = Map.of(

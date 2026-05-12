@@ -6,9 +6,11 @@ import static io.restassured.RestAssured.given;
 
 public class UserClient {
 
+    private static final String BASE_PATH = "/users";
+
     public Response getUsers() {
         return given()
                 .when()
-                .get("/users");
+                .get(BASE_PATH);
     }
 }

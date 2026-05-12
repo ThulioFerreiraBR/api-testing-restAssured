@@ -6,9 +6,11 @@ import static io.restassured.RestAssured.given;
 
 public class HealthClient {
 
+    private static final String BASE_PATH = "/test";
+
     public Response getStatus() {
         return given()
                 .when()
-                .get("/test");
+                .get(BASE_PATH);
     }
 }

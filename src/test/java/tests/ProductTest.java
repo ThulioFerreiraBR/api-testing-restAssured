@@ -2,10 +2,12 @@ package tests;
 
 import base.BaseTest;
 import clients.ProductClient;
+import utils.AuthUtils;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,7 +24,10 @@ public class ProductTest extends BaseTest {
     private static final List<String> ALLOWED_STATUS = List.of("In Stock", "Low Stock");
     private static final int INVALID_ID = Integer.MAX_VALUE;
     private static final int NEGATIVE_ID = -1;
+    private static final String INVALID_TOKEN = "invalidToken";
     private static final String MSG_PRODUCT_NOT_FOUND = "^Product with id '(-?\\d+)' not found$";
+    private static final String MSG_REQUIRED_TOKEN = "Access Token is required";
+    private static final String MSG_EXPIRED_INVALID_TOKEN = "Invalid/Expired Token!";
 
     // -------------------------------------------------------------------------
     // Clients
@@ -79,6 +84,11 @@ public class ProductTest extends BaseTest {
                 .body("availabilityStatus", in(ALLOWED_STATUS));
     }
 
+    // -------------------------------------------------------------------------
+    // Invalid products
+    // -------------------------------------------------------------------------
+
+
     @Test
     @Tag("regression")
     @DisplayName("Should return product by random valid ID")
@@ -109,14 +119,11 @@ public class ProductTest extends BaseTest {
                 .body("availabilityStatus", equalTo(availability));
     }
 
-    // -------------------------------------------------------------------------
-    // Invalid products
-    // -------------------------------------------------------------------------
-
     @Test
     @Tag("regression")
     @DisplayName("Should not return product with non-existent ID")
     void shouldNotReturnProductWithNonExistentId() {
+
         productClient.getProductById(INVALID_ID)
                 .then()
                 .statusCode(404)
@@ -129,6 +136,7 @@ public class ProductTest extends BaseTest {
     @Tag("regression")
     @DisplayName("Should not return product with negative ID")
     void shouldNotReturnProductWithNegativeId() {
+
         productClient.getProductById(NEGATIVE_ID)
                 .then()
                 .statusCode(404)
@@ -136,4 +144,61 @@ public class ProductTest extends BaseTest {
                 .time(lessThan(RESPONSE_TIME_MS))
                 .body("message", matchesRegex(MSG_PRODUCT_NOT_FOUND));
     }
+
+    // -------------------------------------------------------------------------
+    // Authenticated products
+    // -------------------------------------------------------------------------
+
+    @Test
+    @Tag("smoke")
+    @DisplayName("Should return authenticated product successfully")
+    void shouldReturnAuthenticatedProductsSuccessfully() {
+
+        String token = AuthUtils.getValidToken();
+
+        productClient.getAuthProducts(token)
+                .then()
+                .statusCode(200)
+                .header("Content-Type", containsString("application/json"))
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("products", notNullValue())
+                .body("products.size()", greaterThan(0))
+                .body("products.id", everyItem(greaterThan(0)))
+                .body("products.title", everyItem(not(emptyOrNullString())))
+                .body("products.price", everyItem(greaterThan(0F)))
+                .body("products.category", everyItem(not(emptyOrNullString())))
+                .body("products.stock", everyItem(greaterThanOrEqualTo(0)))
+                .body("products.availabilityStatus", everyItem(in(ALLOWED_STATUS)))
+                .body("total", greaterThan(0))
+                .body("limit", greaterThan(0))
+                .body("skip", greaterThanOrEqualTo(0));
+    }
+
+    @Test
+    @Tag("regression")
+    @DisplayName("Should not return products without token")
+    void shouldNotReturnProductsWithoutToken() {
+
+        productClient.getAuthProducts()
+                .then()
+                .statusCode(401)
+                .header("Content-Type", containsString("application/json"))
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("message", equalTo(MSG_REQUIRED_TOKEN));
+    }
+
+    @Test
+    @Tag("regression")
+    @DisplayName("Should not return products with invalid token")
+    void shouldNotReturnProductsWithInvalidToken() {
+
+        productClient.getAuthProducts(INVALID_TOKEN)
+                .then()
+                .statusCode(401)
+                .header("Content-Type", containsString("application/json"))
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("message", equalTo(MSG_EXPIRED_INVALID_TOKEN));
+    }
+
+
 }

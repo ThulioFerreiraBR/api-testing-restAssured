@@ -9,12 +9,14 @@ import static io.restassured.RestAssured.given;
 
 public class AuthClient {
 
+    private static final String BASE_PATH = "/auth/login";
+
     public Response login(Map<String, Object> body) {
 
         return given()
                 .contentType(ContentType.JSON)
                 .body(body)
                 .when()
-                .post("/auth/login");
+                .post(BASE_PATH);
     }
 }

@@ -20,4 +20,17 @@ public class ProductClient {
                 .when()
                 .get(BASE_PATH + "/{id}");
     }
+
+    public Response getAuthProducts(String token) {
+        return given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/auth/products");
+    }
+
+    public Response getAuthProducts() {
+        return given()
+                .when()
+                .get("/auth/products");
+    }
 }
