@@ -8,7 +8,7 @@ public class ProductClient {
 
     private static final String BASE_PATH = "/products";
 
-    public Response getProducts() {
+    public Response getAllProducts() {
         return given()
                 .when()
                 .get(BASE_PATH);
