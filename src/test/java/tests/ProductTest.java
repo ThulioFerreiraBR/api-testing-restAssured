@@ -2,6 +2,8 @@ package tests;
 
 import base.BaseTest;
 import clients.ProductClient;
+import factories.ProductFactory;
+import models.ProductRequest;
 import utils.AuthUtils;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,7 @@ public class ProductTest extends BaseTest {
     private static final List<String> ALLOWED_STATUS = List.of("In Stock", "Low Stock");
     private static final int INVALID_ID = Integer.MAX_VALUE;
     private static final int NEGATIVE_ID = -1;
+    private static final int CREATED_PRODUCT_ID = 195;
     private static final String INVALID_TOKEN = "invalidToken";
     private static final String MSG_PRODUCT_NOT_FOUND = "^Product with id '(-?\\d+)' not found$";
     private static final String MSG_REQUIRED_TOKEN = "Access Token is required";
@@ -209,8 +212,23 @@ public class ProductTest extends BaseTest {
     @DisplayName("Should create product successfully")
     void shouldCreateProductSuccessfully() {
 
+        ProductRequest payload = ProductFactory.createValidProduct();
+
+        productClient.createProduct(payload)
+                .then()
+                .statusCode(201)
+                .header("Content-Type", containsString("application/json"))
+                .time(lessThan(RESPONSE_TIME_MS))
+                .body("id", equalTo(CREATED_PRODUCT_ID))
+                .body("title", equalTo(payload.getTitle()))
+                .body("description", equalTo(payload.getDescription()))
+                .body("price", equalTo(payload.getPrice()))
+                .body("discountPercentage", equalTo(payload.getDiscountPercentage()))
+                .body("rating", equalTo(payload.getRating() ))
+                .body("stock", equalTo(payload.getStock()))
+                .body("brand", equalTo(payload.getBrand()))
+                .body("category", equalTo(payload.getCategory()))
+                .body("thumbnail", equalTo(payload.getThumbnail()));
+
     }
-
-
-
 }

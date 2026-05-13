@@ -15,9 +15,14 @@ public class ProductFactory {
 
         return ProductRequest.builder()
                 .title(faker.commerce().productName())
-                .price(faker.number().randomDouble(2, 10, 1000))
-                .stock(faker.number().numberBetween(1, 100))
+                .description(faker.lorem().sentence(10))
+                .price((float) faker.number().randomDouble(2, 10, 5000))
+                .discountPercentage((float)faker.number().randomDouble(2, 1, 30))
+                .rating((float)faker.number().randomDouble(1, 1, 5))
+                .stock(faker.number().numberBetween(1, 200))
+                .brand(faker.company().name())
                 .category(faker.commerce().department())
+                .thumbnail(faker.internet().image())
                 .build();
     }
 
